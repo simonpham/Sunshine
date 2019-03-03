@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:minHeight="?attr/listPreferredItemHeight"
     android:padding="16dp">
 
     <ImageView
@@ -49,7 +49,7 @@
         android:id="@+id/barrier"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:barrierDirection="end"
+        app:barrierDirection="start"
         app:constraint_referenced_ids="tvDate, tvForecast" />
 
     <TextView
