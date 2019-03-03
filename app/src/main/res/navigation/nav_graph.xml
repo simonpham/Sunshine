@@ -7,6 +7,6 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.github.simonpham.sunshine.HomeFragment"
+        android:name="com.github.simonpham.sunshine.ui.home.HomeFragment"
         android:label="HomeFragment" />
 </navigation>
