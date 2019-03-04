@@ -66,8 +66,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         Forecast forecast = forecasts.get(position);
         holder.tvDate.setText(forecast.getDisplayDate());
         holder.tvForecast.setText(forecast.getWeather().getDescription());
-        holder.tvHigh.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMax()));
-        holder.tvLow.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMin()));
+        holder.tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
+        holder.tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
         holder.ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
     }
 

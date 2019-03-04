@@ -157,10 +157,10 @@ public class HomeFragment extends Fragment {
                     Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
 
                     if (displayDate.equals("Today")) {
-                        tvDate.setText(forecast.getDisplayDate());
+                        tvDate.setText(String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000))));
                         tvForecast.setText(forecast.getWeather().getDescription());
-                        tvHigh.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMax()));
-                        tvLow.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMin()));
+                        tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
+                        tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
                         ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
                     }
 
