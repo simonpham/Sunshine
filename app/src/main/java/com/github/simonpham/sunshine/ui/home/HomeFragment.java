@@ -25,7 +25,9 @@ import com.github.simonpham.sunshine.util.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -134,10 +136,14 @@ public class HomeFragment extends Fragment {
                             objMain.getDouble("grnd_level"),
                             objMain.getInt("humidity")
                     );
+
+                    String desc = objWeather.getString("description");
+                    String descUppercase = desc.substring(0, 1).toUpperCase().concat(desc.substring(1));
+
                     Weather weather = new Weather(
                             objWeather.getInt("id"),
                             objWeather.getString("main"),
-                            objWeather.getString("description"),
+                            descUppercase,
                             objWeather.getString("icon")
                     );
 
