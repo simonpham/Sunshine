@@ -11,8 +11,8 @@ import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.model.Forecast;
 import com.github.simonpham.sunshine.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,9 +63,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Forecast forecast = forecasts.get(position);
         holder.tvForecast.setText(forecast.getWeather().getDescription());
-        holder.tvHigh.setText(String.format("%s℃", forecast.getMain().getTempMax()));
-        holder.tvLow.setText(String.format("%s℃", forecast.getMain().getTempMin()));
-        holder.ivIcon.setImageResource(Utils.getIconResourceForWeatherCondition(forecast.getWeather().getId()));
+        holder.tvHigh.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMax()));
+        holder.tvLow.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMin()));
+        holder.ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
     }
 
     @Override
