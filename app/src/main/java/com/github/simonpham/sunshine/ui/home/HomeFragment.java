@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.simonpham.sunshine.R;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +44,12 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvForecast;
     private ForecastAdapter adapter;
     private List<Forecast> forecasts = new ArrayList<>();
+
+    private ImageView ivIcon;
+    private TextView tvDate;
+    private TextView tvForecast;
+    private TextView tvHigh;
+    private TextView tvLow;
 
     private Handler handler;
 
@@ -60,6 +69,12 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvForecast = view.findViewById(R.id.rvForecast);
+
+        ivIcon = view.findViewById(R.id.ivIcon);
+        tvDate = view.findViewById(R.id.tvDate);
+        tvForecast = view.findViewById(R.id.tvForecast);
+        tvHigh = view.findViewById(R.id.tvHigh);
+        tvLow = view.findViewById(R.id.tvLow);
 
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
@@ -140,7 +155,18 @@ public class HomeFragment extends Fragment {
                             objSnow != null ? objSnow.optDouble("volumn", 0.0) : 0
                     );
                     Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
-                    forecasts.add(forecast);
+
+                    if (displayDate.equals("Today")) {
+                        tvDate.setText(forecast.getDisplayDate());
+                        tvForecast.setText(forecast.getWeather().getDescription());
+                        tvHigh.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMax()));
+                        tvLow.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMin()));
+                        ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
+                    }
+
+                    if (!displayDate.equals("Today")) {
+                        forecasts.add(forecast);
+                    }
                 }
 
                 day = displayDate;
