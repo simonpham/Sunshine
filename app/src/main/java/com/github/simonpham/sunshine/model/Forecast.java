@@ -13,8 +13,9 @@ public class Forecast {
     private Wind wind;
     private Rain rain;
     private Snow snow;
+    private String displayDate;
 
-    public Forecast(long date, Main main, Weather weather, Clouds clouds, Wind wind, Rain rain, Snow snow) {
+    public Forecast(long date, Main main, Weather weather, Clouds clouds, Wind wind, Rain rain, Snow snow, String displayDate) {
         this.date = date;
         this.main = main;
         this.weather = weather;
@@ -22,6 +23,7 @@ public class Forecast {
         this.wind = wind;
         this.rain = rain;
         this.snow = snow;
+        this.displayDate = displayDate;
     }
 
     public long getDate() {
@@ -78,5 +80,13 @@ public class Forecast {
 
     public void setSnow(Snow snow) {
         this.snow = snow;
+    }
+
+    public String getDisplayDate() {
+        return displayDate;
+    }
+
+    public void setDisplayDate(String displayDate) {
+        this.displayDate = displayDate;
     }
 }
