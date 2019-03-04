@@ -2,22 +2,34 @@ package com.github.simonpham.sunshine.ui.home;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.adapter.ForecastAdapter;
+import com.github.simonpham.sunshine.data.RemoteFetch;
+import com.github.simonpham.sunshine.model.Clouds;
+import com.github.simonpham.sunshine.model.Forecast;
+import com.github.simonpham.sunshine.model.Main;
+import com.github.simonpham.sunshine.model.Rain;
+import com.github.simonpham.sunshine.model.Snow;
+import com.github.simonpham.sunshine.model.Weather;
+import com.github.simonpham.sunshine.model.Wind;
+import com.github.simonpham.sunshine.util.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.github.simonpham.sunshine.R;
-import com.github.simonpham.sunshine.adapter.ForecastAdapter;
-import com.github.simonpham.sunshine.model.Forecast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -30,8 +42,10 @@ public class HomeFragment extends Fragment {
     private ForecastAdapter adapter;
     private List<Forecast> forecasts = new ArrayList<>();
 
+    private Handler handler;
+
     public HomeFragment() {
-        // Required empty public constructor
+        handler = new Handler();
     }
 
     @Override
@@ -49,5 +63,95 @@ public class HomeFragment extends Fragment {
 
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
+        updateWeatherData();
+    }
+
+    private void updateWeatherData() {
+        new Thread() {
+            public void run() {
+                final JSONObject json = RemoteFetch.getJSON(getActivity());
+                if (json == null) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getActivity(), "City not found!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            renderWeather(json);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    private void renderWeather(JSONObject json) {
+        try {
+            JSONObject city = json.getJSONObject("city");
+            JSONArray forecastList = json.getJSONArray("list");
+            int i;
+
+            String day = "";
+            for (i = 0; i < forecastList.length(); i++) {
+                JSONObject obj = forecastList.getJSONObject(i);
+
+                long date = obj.getLong("dt");
+
+                String displayDate = Utils.getDayName(getContext(), date);
+
+                if (!day.equals(displayDate)) {
+                    JSONObject objMain = obj.getJSONObject("main");
+                    JSONObject objWeather = obj.getJSONArray("weather").getJSONObject(0);
+                    JSONObject objClouds = obj.optJSONObject("clouds");
+                    JSONObject objWind = obj.optJSONObject("wind");
+                    JSONObject objRain = obj.optJSONObject("rain");
+                    JSONObject objSnow = obj.optJSONObject("snow");
+
+                    Main main = new Main(
+                            objMain.getDouble("temp"),
+                            objMain.getDouble("temp_min"),
+                            objMain.getDouble("temp_max"),
+                            objMain.getDouble("pressure"),
+                            objMain.getDouble("sea_level"),
+                            objMain.getDouble("grnd_level"),
+                            objMain.getInt("humidity")
+                    );
+                    Weather weather = new Weather(
+                            objWeather.getInt("id"),
+                            objWeather.getString("main"),
+                            objWeather.getString("description"),
+                            objWeather.getString("icon")
+                    );
+
+                    Clouds clouds = new Clouds(
+                            objClouds != null ? objClouds.optInt("all", 0) : 0
+                    );
+                    Wind wind = new Wind(
+                            objWind != null ? objWind.optDouble("speed", 0.0) : 0,
+                            objWind != null ? objWind.optDouble("deg", 0.0) : 0
+                    );
+                    Rain rain = new Rain(
+                            objRain != null ? objRain.optDouble("volumn", 0.0) : 0
+                    );
+                    Snow snow = new Snow(
+                            objSnow != null ? objSnow.optDouble("volumn", 0.0) : 0
+                    );
+                    Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
+                    forecasts.add(forecast);
+                }
+
+                day = displayDate;
+            }
+
+            adapter.notifyDataSetChanged();
+
+        } catch (Exception e) {
+            // error
+            Toast.makeText(getActivity(), "Exception " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }
