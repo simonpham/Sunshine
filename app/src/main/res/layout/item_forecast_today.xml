@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/sunshine_light_blue"
+    android:background="@color/colorPrimaryLight"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:padding="16dp">
 
