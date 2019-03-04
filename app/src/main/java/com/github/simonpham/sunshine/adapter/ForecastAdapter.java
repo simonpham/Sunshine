@@ -30,6 +30,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivIcon;
+        TextView tvDate;
         TextView tvForecast;
         TextView tvHigh;
         TextView tvLow;
@@ -40,6 +41,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             this.layout = v;
 
             ivIcon = v.findViewById(R.id.ivIcon);
+            tvDate = v.findViewById(R.id.tvDate);
             tvForecast = v.findViewById(R.id.tvForecast);
             tvHigh = v.findViewById(R.id.tvHigh);
             tvLow = v.findViewById(R.id.tvLow);
@@ -62,6 +64,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Forecast forecast = forecasts.get(position);
+        holder.tvDate.setText(forecast.getDisplayDate());
         holder.tvForecast.setText(forecast.getWeather().getDescription());
         holder.tvHigh.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMax()));
         holder.tvLow.setText(String.format(Locale.US, "%.0f°C", forecast.getMain().getTempMin()));
