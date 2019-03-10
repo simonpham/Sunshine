@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.github.simonpham.sunshine.Consts.API_KEY;
+import static com.github.simonpham.sunshine.Consts.OPEN_WEATHER_MAP_API;
 
 /**
  * Created by Simon Pham on 3/3/19.
@@ -20,9 +21,6 @@ import static com.github.simonpham.sunshine.Consts.API_KEY;
  */
 
 public class RemoteFetch {
-
-    private static final String OPEN_WEATHER_MAP_API =
-            "https://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&appid=%s";
 
     public static JSONObject getJSON(Context context) {
         CityPreference cityPref = new CityPreference((Activity) context);
