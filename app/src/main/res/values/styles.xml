@@ -1,11 +1,27 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
+    <style name="AppTheme.ActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <!--<item name="background">@color/colorPrimary</item>-->
+        <item name="titleTextStyle">@style/AppTheme.Text.ActionBarTitle</item>
+        <item name="android:titleTextStyle">@style/AppTheme.Text.ActionBarTitle</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="AppTheme.Text.ActionBarTitle" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="fontFamily">cursive</item>
+        <item name="android:fontFamily">cursive</item>
+        <!--<item name="android:textColor">@color/colorAccent</item>-->
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>
