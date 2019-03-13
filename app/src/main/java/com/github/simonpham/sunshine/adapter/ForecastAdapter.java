@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -23,6 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
+
+    private final int ITEM_WEATHER_TODAY = 0;
+    private final int ITEM_WEATHER = 1;
 
     private Context context;
     private List<Forecast> forecasts;
@@ -57,7 +61,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.item_forecast, parent, false);
+        int layoutId = R.layout.item_forecast;
+        if (viewType == ITEM_WEATHER_TODAY) {
+            layoutId = R.layout.item_forecast_today;
+        }
+        View v = inflater.inflate(layoutId, parent, false);
         return new ViewHolder(v);
     }
 
@@ -69,6 +77,21 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         holder.tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
         holder.tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
         holder.ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.actionShowDetail);
+            }
+        });
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return ITEM_WEATHER_TODAY;
+        }
+        return ITEM_WEATHER;
     }
 
     @Override

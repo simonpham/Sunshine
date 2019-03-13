@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +46,6 @@ public class HomeFragment extends Fragment {
     private ForecastAdapter adapter;
     private List<Forecast> forecasts = new ArrayList<>();
 
-    private ImageView ivIcon;
-    private TextView tvDate;
-    private TextView tvForecast;
-    private TextView tvHigh;
-    private TextView tvLow;
-
     private Handler handler;
 
     public HomeFragment() {
@@ -72,11 +65,6 @@ public class HomeFragment extends Fragment {
 
         rvForecast = view.findViewById(R.id.rvForecast);
 
-        ivIcon = view.findViewById(R.id.ivIcon);
-        tvDate = view.findViewById(R.id.tvDate);
-        tvForecast = view.findViewById(R.id.tvForecast);
-        tvHigh = view.findViewById(R.id.tvHigh);
-        tvLow = view.findViewById(R.id.tvLow);
 
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
@@ -107,6 +95,7 @@ public class HomeFragment extends Fragment {
 
     private void renderWeather(JSONObject json) {
         try {
+            forecasts.clear();
             JSONObject city = json.getJSONObject("city");
             JSONArray forecastList = json.getJSONArray("list");
             int i;
@@ -118,6 +107,9 @@ public class HomeFragment extends Fragment {
                 long date = obj.getLong("dt");
 
                 String displayDate = Utils.getDayName(getContext(), date);
+                if (displayDate.equals("Today")) {
+                    displayDate = String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000)));
+                }
 
                 if (!day.equals(displayDate)) {
                     JSONObject objMain = obj.getJSONObject("main");
@@ -162,17 +154,7 @@ public class HomeFragment extends Fragment {
                     );
                     Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
 
-                    if (displayDate.equals("Today")) {
-                        tvDate.setText(String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000))));
-                        tvForecast.setText(forecast.getWeather().getDescription());
-                        tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
-                        tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
-                        ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
-                    }
-
-                    if (!displayDate.equals("Today")) {
-                        forecasts.add(forecast);
-                    }
+                    forecasts.add(forecast);
                 }
 
                 day = displayDate;
