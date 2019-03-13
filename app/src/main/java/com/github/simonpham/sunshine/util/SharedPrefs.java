@@ -10,11 +10,11 @@ import static com.github.simonpham.sunshine.Consts.DEFAULT_CITY;
  * Email: simonpham.dn@gmail.com
  */
 
-public class CityPreference {
+public class SharedPrefs {
 
     private SharedPreferences prefs;
 
-    public CityPreference(Activity activity) {
+    public SharedPrefs(Activity activity) {
         prefs = activity.getPreferences(Activity.MODE_PRIVATE);
     }
 
