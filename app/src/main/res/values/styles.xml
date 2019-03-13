@@ -20,7 +20,7 @@
     <style name="AppTheme.Text.ActionBarTitle" parent="@style/TextAppearance.AppCompat.Title">
         <item name="fontFamily">cursive</item>
         <item name="android:fontFamily">cursive</item>
-        <!--<item name="android:textColor">@color/colorAccent</item>-->
+        <item name="android:textSize">28sp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

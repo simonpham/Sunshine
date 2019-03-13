@@ -6,8 +6,9 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.adapter.ForecastAdapter;
@@ -34,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 /**
@@ -42,7 +44,13 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class HomeFragment extends Fragment {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvForecast;
+
+    private LinearLayout errorLayout;
+    private TextView tvErrorMessage;
+    private Button reloadButton;
+
     private ForecastAdapter adapter;
     private List<Forecast> forecasts = new ArrayList<>();
 
@@ -63,12 +71,31 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         rvForecast = view.findViewById(R.id.rvForecast);
 
+        errorLayout = view.findViewById(R.id.errorLayout);
+        tvErrorMessage = view.findViewById(R.id.tvErrorMessage);
+        reloadButton = view.findViewById(R.id.reloadButton);
 
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
         updateWeatherData();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateWeatherData();
+            }
+        });
+
+        reloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipeRefreshLayout.setRefreshing(true);
+                updateWeatherData();
+            }
+        });
     }
 
     private void updateWeatherData() {
@@ -78,8 +105,8 @@ public class HomeFragment extends Fragment {
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getActivity(), "City not found!",
-                                    Toast.LENGTH_LONG).show();
+                            errorLayout.setVisibility(View.VISIBLE);
+                            tvErrorMessage.setText("No network/City not found!");
                         }
                     });
                 } else {
@@ -89,6 +116,7 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
+                swipeRefreshLayout.setRefreshing(false);
             }
         }.start();
     }
@@ -160,12 +188,13 @@ public class HomeFragment extends Fragment {
                 day = displayDate;
             }
 
+            errorLayout.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {
             // error
-            Toast.makeText(getActivity(), "Exception " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            errorLayout.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText(String.format("Error: %s", e.getMessage()));
         }
     }
 }
