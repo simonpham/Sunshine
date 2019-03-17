@@ -1,12 +1,13 @@
 package com.github.simonpham.sunshine.util;
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.SharedPreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.github.simonpham.sunshine.Consts.DEFAULT_CITY;
+import static com.github.simonpham.sunshine.Consts.PACKAGE_NAME;
 
 /**
  * Created by Simon Pham on 3/3/19.
@@ -17,8 +18,8 @@ public class SharedPrefs {
 
     private SharedPreferences prefs;
 
-    public SharedPrefs(Activity activity) {
-        prefs = activity.getPreferences(Activity.MODE_PRIVATE);
+    public SharedPrefs(Application application) {
+        prefs = application.getSharedPreferences(PACKAGE_NAME + "_prefs", Application.MODE_PRIVATE);
     }
 
     public String getCity() {

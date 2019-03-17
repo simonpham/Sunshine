@@ -1,7 +1,6 @@
 package com.github.simonpham.sunshine.ui.home;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -32,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,11 +53,11 @@ public class HomeFragment extends Fragment {
     private Button reloadButton;
 
     private ForecastAdapter adapter;
-    private List<Forecast> forecasts = SingletonIntances.getInstance().getForecasts();
+    private List<Forecast> forecasts = SingletonIntances.getForecasts();
 
     private Handler handler;
 
-    SharedPrefs sharedPrefs;
+    SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
 
     public HomeFragment() {
         handler = new Handler();
@@ -75,8 +73,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        sharedPrefs = new SharedPrefs((Activity) Objects.requireNonNull(getContext()));
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         rvForecast = view.findViewById(R.id.rvForecast);
@@ -200,7 +196,7 @@ public class HomeFragment extends Fragment {
                 day = displayDate;
             }
 
-            SingletonIntances.getInstance().setForecasts(forecasts);
+            SingletonIntances.setForecasts(forecasts);
 
             errorLayout.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
