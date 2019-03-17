@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import com.github.simonpham.sunshine.R;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 /**
  * Created by Simon Pham on 3/10/19.
@@ -30,4 +33,18 @@ public class DetailFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Toolbar toolbar = view.findViewById(R.id.toolBar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).popBackStack();
+            }
+        });
+    }
 }
