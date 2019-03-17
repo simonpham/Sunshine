@@ -1,6 +1,10 @@
 package com.github.simonpham.sunshine;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.github.simonpham.sunshine.model.Forecast;
+import com.github.simonpham.sunshine.util.SharedPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,25 +15,35 @@ import java.util.List;
  */
 public class SingletonIntances {
 
+    private static boolean initialized = false;
     private static SingletonIntances INSTANCE = null;
 
     private List<Forecast> forecasts = new ArrayList<>();
 
+    private SharedPrefs sharedPrefs = null;
+
     private SingletonIntances() {
     }
 
-    public static SingletonIntances getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SingletonIntances();
+    static void init(Context context) {
+        if (!initialized) {
+            if (INSTANCE == null) {
+                INSTANCE = new SingletonIntances();
+            }
+            INSTANCE.sharedPrefs = new SharedPrefs((Application) context);
+            initialized = true;
         }
-        return (INSTANCE);
     }
 
-    public List<Forecast> getForecasts() {
-        return this.forecasts;
+    public static List<Forecast> getForecasts() {
+        return INSTANCE.forecasts;
     }
 
-    public void setForecasts(List<Forecast> forecasts) {
-        this.forecasts = forecasts;
+    public static void setForecasts(List<Forecast> forecasts) {
+        INSTANCE.forecasts = forecasts;
+    }
+
+    public static SharedPrefs getSharedPrefs() {
+        return INSTANCE.sharedPrefs;
     }
 }
