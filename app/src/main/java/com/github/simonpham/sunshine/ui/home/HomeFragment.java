@@ -1,6 +1,7 @@
 package com.github.simonpham.sunshine.ui.home;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.adapter.ForecastAdapter;
 import com.github.simonpham.sunshine.data.RemoteFetch;
 import com.github.simonpham.sunshine.model.Clouds;
@@ -20,16 +22,17 @@ import com.github.simonpham.sunshine.model.Rain;
 import com.github.simonpham.sunshine.model.Snow;
 import com.github.simonpham.sunshine.model.Weather;
 import com.github.simonpham.sunshine.model.Wind;
+import com.github.simonpham.sunshine.util.SharedPrefs;
 import com.github.simonpham.sunshine.util.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,9 +55,11 @@ public class HomeFragment extends Fragment {
     private Button reloadButton;
 
     private ForecastAdapter adapter;
-    private List<Forecast> forecasts = new ArrayList<>();
+    private List<Forecast> forecasts = SingletonIntances.getInstance().getForecasts();
 
     private Handler handler;
+
+    SharedPrefs sharedPrefs;
 
     public HomeFragment() {
         handler = new Handler();
@@ -70,6 +75,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sharedPrefs = new SharedPrefs((Activity) Objects.requireNonNull(getContext()));
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         rvForecast = view.findViewById(R.id.rvForecast);
@@ -101,7 +108,10 @@ public class HomeFragment extends Fragment {
     private void updateWeatherData() {
         new Thread() {
             public void run() {
-                final JSONObject json = RemoteFetch.getJSON(getActivity());
+                JSONObject json = RemoteFetch.getJSON(getActivity());
+                if (json == null) {
+                    json = sharedPrefs.getLastWeatherData();
+                }
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
@@ -110,9 +120,11 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 } else {
+                    final JSONObject finalJson = json;
                     handler.post(new Runnable() {
                         public void run() {
-                            renderWeather(json);
+                            sharedPrefs.setLastWeatherData(finalJson);
+                            renderWeather(finalJson);
                         }
                     });
                 }
@@ -187,6 +199,8 @@ public class HomeFragment extends Fragment {
 
                 day = displayDate;
             }
+
+            SingletonIntances.getInstance().setForecasts(forecasts);
 
             errorLayout.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
