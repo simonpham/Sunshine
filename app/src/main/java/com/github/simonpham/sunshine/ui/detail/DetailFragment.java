@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -56,9 +57,13 @@ public class DetailFragment extends Fragment {
 
         Toolbar toolbar = view.findViewById(R.id.toolBar);
 
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+
         RecyclerView rvForecastDetail = view.findViewById(R.id.rvForecastDetail);
         ImageView ivIcon = view.findViewById(R.id.ivIcon);
-        TextView tvDate = view.findViewById(R.id.tvDate);
         TextView tvForecast = view.findViewById(R.id.tvForecast);
         TextView tvHigh = view.findViewById(R.id.tvHigh);
         TextView tvLow = view.findViewById(R.id.tvLow);

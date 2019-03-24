@@ -4,6 +4,9 @@ package com.github.simonpham.sunshine.ui.home;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,7 +37,11 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -44,6 +51,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
  * Email: simonpham.dn@gmail.com
  */
 public class HomeFragment extends Fragment {
+
+    private Toolbar toolbar;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView rvForecast;
@@ -66,13 +75,22 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        setHasOptionsMenu(true);
+        return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        toolbar = view.findViewById(R.id.toolBar);
+        toolbar.setOverflowIcon(ResourcesCompat.getDrawable(this.getResources(), R.drawable.ic_dots_vertical_24dp, null));
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
 
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         rvForecast = view.findViewById(R.id.rvForecast);
@@ -202,6 +220,22 @@ public class HomeFragment extends Fragment {
             // error
             errorLayout.setVisibility(View.VISIBLE);
             tvErrorMessage.setText(String.format("Error: %s", e.getMessage()));
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuSettings:
+                Navigation.findNavController(rvForecast).navigate(R.id.actionShowPrefs);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
