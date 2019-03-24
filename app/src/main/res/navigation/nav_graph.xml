@@ -16,6 +16,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/homeFragment" />
+        <action
+            android:id="@+id/actionShowPrefs"
+            app:destination="@id/prefsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/homeFragment" />
     </fragment>
 
     <fragment
@@ -27,4 +35,9 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/prefsFragment"
+        android:name="com.github.simonpham.sunshine.ui.prefs.PreferencesFragment"
+        android:label="PreferencesFragment" />
 </navigation>
