@@ -7,7 +7,8 @@
     <string name="refresh">Refresh</string>
 
     <string name="title_details">Details</string>
-    <string name="default_city">Thanh pho Ho Chi Minh, VN</string>
+
+    <string name="default_city">Ho Chi Minh City, VN</string>
 
     <string name="pref_current_location" translatable="false">current_location</string>
 </resources>

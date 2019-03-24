@@ -12,5 +12,5 @@ public final class Consts {
             "https://api.openweathermap.org/data/2.5/forecast?q=%s&units=%s&appid=%s";
     public static final String API_KEY = "4c85ba37c1f1d610f0a2e51c4768d53d";
 
-    public static final String DEFAULT_CITY = "Thanh pho Ho Chi Minh, VN";
+    public static final String DEFAULT_CITY = "Ho Chi Minh City, VN";
 }
