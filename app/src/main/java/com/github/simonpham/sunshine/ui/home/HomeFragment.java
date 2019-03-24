@@ -4,13 +4,17 @@ package com.github.simonpham.sunshine.ui.home;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.adapter.ForecastAdapter;
 import com.github.simonpham.sunshine.data.RemoteFetch;
 import com.github.simonpham.sunshine.model.Clouds;
@@ -20,21 +24,26 @@ import com.github.simonpham.sunshine.model.Rain;
 import com.github.simonpham.sunshine.model.Snow;
 import com.github.simonpham.sunshine.model.Weather;
 import com.github.simonpham.sunshine.model.Wind;
+import com.github.simonpham.sunshine.util.SharedPrefs;
 import com.github.simonpham.sunshine.util.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 /**
@@ -43,17 +52,21 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class HomeFragment extends Fragment {
 
-    private RecyclerView rvForecast;
-    private ForecastAdapter adapter;
-    private List<Forecast> forecasts = new ArrayList<>();
+    private Toolbar toolbar;
 
-    private ImageView ivIcon;
-    private TextView tvDate;
-    private TextView tvForecast;
-    private TextView tvHigh;
-    private TextView tvLow;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView rvForecast;
+
+    private LinearLayout errorLayout;
+    private TextView tvErrorMessage;
+    private Button reloadButton;
+
+    private ForecastAdapter adapter;
+    private List<Forecast> forecasts = SingletonIntances.getForecasts();
 
     private Handler handler;
+
+    SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
 
     public HomeFragment() {
         handler = new Handler();
@@ -62,51 +75,80 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
 
+        toolbar = view.findViewById(R.id.toolBar);
+        toolbar.setOverflowIcon(ResourcesCompat.getDrawable(this.getResources(), R.drawable.ic_dots_vertical_24dp, null));
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+        }
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         rvForecast = view.findViewById(R.id.rvForecast);
 
-        ivIcon = view.findViewById(R.id.ivIcon);
-        tvDate = view.findViewById(R.id.tvDate);
-        tvForecast = view.findViewById(R.id.tvForecast);
-        tvHigh = view.findViewById(R.id.tvHigh);
-        tvLow = view.findViewById(R.id.tvLow);
+        errorLayout = view.findViewById(R.id.errorLayout);
+        tvErrorMessage = view.findViewById(R.id.tvErrorMessage);
+        reloadButton = view.findViewById(R.id.reloadButton);
 
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
         updateWeatherData();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateWeatherData();
+            }
+        });
+
+        reloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swipeRefreshLayout.setRefreshing(true);
+                updateWeatherData();
+            }
+        });
     }
 
     private void updateWeatherData() {
         new Thread() {
             public void run() {
-                final JSONObject json = RemoteFetch.getJSON(getActivity());
+                JSONObject json = RemoteFetch.getJSON(getActivity());
+                if (json == null) {
+                    json = sharedPrefs.getLastWeatherData();
+                }
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            Toast.makeText(getActivity(), "City not found!",
-                                    Toast.LENGTH_LONG).show();
+                            errorLayout.setVisibility(View.VISIBLE);
+                            tvErrorMessage.setText("No network/City not found!");
                         }
                     });
                 } else {
+                    final JSONObject finalJson = json;
                     handler.post(new Runnable() {
                         public void run() {
-                            renderWeather(json);
+                            sharedPrefs.setLastWeatherData(finalJson);
+                            renderWeather(finalJson);
                         }
                     });
                 }
+                swipeRefreshLayout.setRefreshing(false);
             }
         }.start();
     }
 
     private void renderWeather(JSONObject json) {
         try {
+            forecasts.clear();
             JSONObject city = json.getJSONObject("city");
             JSONArray forecastList = json.getJSONArray("list");
             int i;
@@ -118,6 +160,9 @@ public class HomeFragment extends Fragment {
                 long date = obj.getLong("dt");
 
                 String displayDate = Utils.getDayName(getContext(), date);
+                if (displayDate.equals("Today")) {
+                    displayDate = String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000)));
+                }
 
                 if (!day.equals(displayDate)) {
                     JSONObject objMain = obj.getJSONObject("main");
@@ -147,43 +192,49 @@ public class HomeFragment extends Fragment {
                             objWeather.getString("icon")
                     );
 
-                    Clouds clouds = new Clouds(
-                            objClouds != null ? objClouds.optInt("all", 0) : 0
-                    );
-                    Wind wind = new Wind(
-                            objWind != null ? objWind.optDouble("speed", 0.0) : 0,
-                            objWind != null ? objWind.optDouble("deg", 0.0) : 0
-                    );
-                    Rain rain = new Rain(
-                            objRain != null ? objRain.optDouble("volumn", 0.0) : 0
-                    );
-                    Snow snow = new Snow(
-                            objSnow != null ? objSnow.optDouble("volumn", 0.0) : 0
-                    );
+                    Clouds clouds = objClouds != null ?
+                            new Clouds(objClouds.optInt("all", 0)) : null;
+                    Wind wind = objWind != null ?
+                            new Wind(objWind.optDouble("speed", 0.0),
+                                    objWind.optDouble("deg", 0.0)) : null;
+                    Rain rain = objRain != null ? new Rain(
+                            objRain.optDouble("volumn", 0.0)) : null;
+                    Snow snow = objSnow != null ? new Snow(
+                            objSnow.optDouble("volumn", 0.0)) : null;
+
                     Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
 
-                    if (displayDate.equals("Today")) {
-                        tvDate.setText(String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000))));
-                        tvForecast.setText(forecast.getWeather().getDescription());
-                        tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
-                        tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
-                        ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
-                    }
-
-                    if (!displayDate.equals("Today")) {
-                        forecasts.add(forecast);
-                    }
+                    forecasts.add(forecast);
                 }
 
                 day = displayDate;
             }
 
+            SingletonIntances.setForecasts(forecasts);
+
+            errorLayout.setVisibility(View.GONE);
             adapter.notifyDataSetChanged();
 
         } catch (Exception e) {
             // error
-            Toast.makeText(getActivity(), "Exception " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            errorLayout.setVisibility(View.VISIBLE);
+            tvErrorMessage.setText(String.format("Error: %s", e.getMessage()));
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_settings:
+                Navigation.findNavController(rvForecast).navigate(R.id.actionShowPrefs);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

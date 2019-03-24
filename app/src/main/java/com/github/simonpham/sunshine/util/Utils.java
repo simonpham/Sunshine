@@ -1,8 +1,10 @@
 package com.github.simonpham.sunshine.util;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.model.Forecast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,6 +15,7 @@ import java.util.Locale;
  * Created by Simon Pham on 3/3/19.
  * Email: simonpham.dn@gmail.com
  */
+
 public class Utils {
 
     public static int julianDay(long dateInMillis) {
@@ -124,5 +127,13 @@ public class Utils {
             return R.drawable.art_clouds;
         }
         return -1;
+    }
+
+    public static void shareForecast(Context context, Forecast forecast) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, forecast.toString());
+        sendIntent.setType("text/plain");
+        context.startActivity(sendIntent);
     }
 }

@@ -31,6 +31,7 @@ dependencies {
 
     def nav_version = "1.0.0-rc02"
     implementation "android.arch.navigation:navigation-fragment:$nav_version"
-    // For Kotlin use navigation-fragment-ktx
     implementation "android.arch.navigation:navigation-ui:$nav_version"
+
+    implementation "androidx.preference:preference:1.0.0"
 }

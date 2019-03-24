@@ -1,9 +1,9 @@
 package com.github.simonpham.sunshine.data;
 
-import android.app.Activity;
 import android.content.Context;
 
-import com.github.simonpham.sunshine.util.CityPreference;
+import com.github.simonpham.sunshine.SingletonIntances;
+import com.github.simonpham.sunshine.util.SharedPrefs;
 
 import org.json.JSONObject;
 
@@ -23,9 +23,9 @@ import static com.github.simonpham.sunshine.Consts.OPEN_WEATHER_MAP_API;
 public class RemoteFetch {
 
     public static JSONObject getJSON(Context context) {
-        CityPreference cityPref = new CityPreference((Activity) context);
+        SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
         try {
-            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, cityPref.getCity(), API_KEY));
+            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, sharedPrefs.getCity(), sharedPrefs.getMetric(), API_KEY));
             HttpURLConnection connection =
                     (HttpURLConnection) url.openConnection();
 
