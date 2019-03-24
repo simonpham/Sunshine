@@ -75,13 +75,12 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
-        setHasOptionsMenu(true);
-        return v;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
 
         toolbar = view.findViewById(R.id.toolBar);
@@ -231,7 +230,7 @@ public class HomeFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menuSettings:
+            case R.id.menu_item_settings:
                 Navigation.findNavController(rvForecast).navigate(R.id.actionShowPrefs);
                 return true;
             default:

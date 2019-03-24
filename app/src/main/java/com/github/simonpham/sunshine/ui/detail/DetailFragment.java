@@ -3,6 +3,9 @@ package com.github.simonpham.sunshine.ui.detail;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,8 +14,8 @@ import android.widget.TextView;
 import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.adapter.ForecastDetailsAdapter;
-import com.github.simonpham.sunshine.model.ItemInfo;
 import com.github.simonpham.sunshine.model.Forecast;
+import com.github.simonpham.sunshine.model.ItemInfo;
 import com.github.simonpham.sunshine.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +42,8 @@ public class DetailFragment extends Fragment {
 
     private ForecastDetailsAdapter adapter;
     private List<ItemInfo> forecastDetails = new ArrayList<>();
+
+    private Forecast forecast;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -53,9 +59,11 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
 
         Toolbar toolbar = view.findViewById(R.id.toolBar);
+        toolbar.setOverflowIcon(ResourcesCompat.getDrawable(this.getResources(), R.drawable.ic_dots_vertical_24dp, null));
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
@@ -78,7 +86,7 @@ public class DetailFragment extends Fragment {
 
 
         int forecastId = Objects.requireNonNull(getArguments()).getInt("forecastId", 0);
-        Forecast forecast = SingletonIntances.getForecasts().get(forecastId);
+        forecast = SingletonIntances.getForecasts().get(forecastId);
 
         String displayDate = Utils.getDayName(getContext(), forecast.getDate());
         toolbar.setTitle(String.format("%s, %s", displayDate, new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(forecast.getDate() * 1000))));
@@ -105,5 +113,21 @@ public class DetailFragment extends Fragment {
 
         adapter = new ForecastDetailsAdapter(getContext(), forecastDetails);
         rvForecastDetail.setAdapter(adapter);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_details, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                Utils.shareForecast(Objects.requireNonNull(this.getContext()), forecast);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
