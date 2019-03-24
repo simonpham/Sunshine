@@ -13,4 +13,6 @@ public final class Consts {
     public static final String API_KEY = "4c85ba37c1f1d610f0a2e51c4768d53d";
 
     public static final String DEFAULT_CITY = "Ho Chi Minh City, VN";
+
+    public static final String NOTIFICATION_CHANNEL_ID = PACKAGE_NAME + ".WEATHER_NOTIFICATION";
 }
