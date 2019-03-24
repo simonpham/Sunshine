@@ -19,15 +19,19 @@ public class SharedPrefs {
     private SharedPreferences prefs;
 
     public SharedPrefs(Application application) {
-        prefs = application.getSharedPreferences(PACKAGE_NAME + "_prefs", Application.MODE_PRIVATE);
+        prefs = application.getSharedPreferences(PACKAGE_NAME + "_preferences", Application.MODE_PRIVATE);
+    }
+
+    public SharedPreferences getPrefs() {
+        return prefs;
     }
 
     public String getCity() {
-        return prefs.getString("city", DEFAULT_CITY);
+        return prefs.getString("current_location", DEFAULT_CITY);
     }
 
     public void setCity(String city) {
-        prefs.edit().putString("city", city).apply();
+        prefs.edit().putString("current_location", city).apply();
     }
 
     public JSONObject getLastWeatherData() {
