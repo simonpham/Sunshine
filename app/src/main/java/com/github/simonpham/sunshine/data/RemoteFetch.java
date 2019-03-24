@@ -25,7 +25,7 @@ public class RemoteFetch {
     public static JSONObject getJSON(Context context) {
         SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
         try {
-            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, sharedPrefs.getCity(), API_KEY));
+            URL url = new URL(String.format(OPEN_WEATHER_MAP_API, sharedPrefs.getCity(), sharedPrefs.getMetric(), API_KEY));
             HttpURLConnection connection =
                     (HttpURLConnection) url.openConnection();
 

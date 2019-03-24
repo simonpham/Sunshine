@@ -30,6 +30,10 @@ public class SharedPrefs {
         return prefs.getString("current_location", DEFAULT_CITY);
     }
 
+    public String getMetric() {
+        return prefs.getBoolean("use_celsius", true) ? "metric" : "imperial";
+    }
+
     public void setCity(String city) {
         prefs.edit().putString("current_location", city).apply();
     }
