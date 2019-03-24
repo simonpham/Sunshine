@@ -175,19 +175,16 @@ public class HomeFragment extends Fragment {
                             objWeather.getString("icon")
                     );
 
-                    Clouds clouds = new Clouds(
-                            objClouds != null ? objClouds.optInt("all", 0) : 0
-                    );
-                    Wind wind = new Wind(
-                            objWind != null ? objWind.optDouble("speed", 0.0) : 0,
-                            objWind != null ? objWind.optDouble("deg", 0.0) : 0
-                    );
-                    Rain rain = new Rain(
-                            objRain != null ? objRain.optDouble("volumn", 0.0) : 0
-                    );
-                    Snow snow = new Snow(
-                            objSnow != null ? objSnow.optDouble("volumn", 0.0) : 0
-                    );
+                    Clouds clouds = objClouds != null ?
+                            new Clouds(objClouds.optInt("all", 0)) : null;
+                    Wind wind = objWind != null ?
+                            new Wind(objWind.optDouble("speed", 0.0),
+                                    objWind.optDouble("deg", 0.0)) : null;
+                    Rain rain = objRain != null ? new Rain(
+                            objRain.optDouble("volumn", 0.0)) : null;
+                    Snow snow = objSnow != null ? new Snow(
+                            objSnow.optDouble("volumn", 0.0)) : null;
+
                     Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
 
                     forecasts.add(forecast);

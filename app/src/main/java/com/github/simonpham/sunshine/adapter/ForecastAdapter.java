@@ -1,6 +1,7 @@
 package com.github.simonpham.sunshine.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +71,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Forecast forecast = forecasts.get(position);
         holder.tvDate.setText(forecast.getDisplayDate());
         holder.tvForecast.setText(forecast.getWeather().getDescription());
@@ -81,7 +82,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.actionShowDetail);
+                Bundle bundle = new Bundle();
+                bundle.putInt("forecastId", position);
+                Navigation.findNavController(v).navigate(R.id.actionShowDetail, bundle);
             }
         });
     }

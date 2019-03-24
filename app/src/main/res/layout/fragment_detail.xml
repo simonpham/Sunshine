@@ -19,28 +19,50 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary">
+            app:collapsedTitleTextAppearance="@style/AppTheme.TitleText"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleGravity="top|center_horizontal"
+            app:expandedTitleTextAppearance="@style/AppTheme.TitleTextExpanded"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <include
+                android:id="@+id/topBanner"
+                layout="@layout/item_forecast_today"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="?attr/actionBarSize"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolBar"
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize">
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_arrow_back_24dp"
+                app:titleTextColor="@color/white" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_details"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="@color/white" />
-
-            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvForecastDetail"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:background="#607d8b"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvForecastDetail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_detail_info">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

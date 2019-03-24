@@ -21,5 +21,10 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.github.simonpham.sunshine.ui.detail.DetailFragment"
-        android:label="DetailFragment" />
+        android:label="DetailFragment">
+        <argument
+            android:name="forecastId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
 </navigation>
