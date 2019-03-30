@@ -24,6 +24,7 @@ public class MainApplication extends Application {
                 .Builder(NotificationWorker.class, 15, TimeUnit.MINUTES)
                 .build();
 
+        WorkManager.getInstance().cancelAllWork();
         WorkManager.getInstance().enqueue(notificationRequest);
     }
 }
