@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
         } else {
             errorLayout.setVisibility(View.VISIBLE);
-            tvErrorMessage.setText(R.string.message_error_empty_response);
+            tvErrorMessage.setText(R.string.message_error_json);
         }
 
     }
