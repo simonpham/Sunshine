@@ -2,6 +2,7 @@ package com.github.simonpham.sunshine.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.SingletonIntances;
@@ -210,5 +211,37 @@ public class Utils {
 
         WorkManager.getInstance().cancelAllWork();
         WorkManager.getInstance().enqueue(notificationRequest);
+    }
+
+    public static void openUrl(Context context, String url, String message) {
+        if (message == null) {
+            message = "Open " + url;
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(Intent.createChooser(intent, message));
+    }
+
+    public static void openPlayStore(Context context, String packageName, boolean isDevPage) {
+        String prefix = "details?id=";
+        if (isDevPage) {
+            prefix = "dev?id=";
+        }
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://" + prefix + packageName)));
+        } catch (Throwable activityNotFound) {
+            openUrl(context, "https://play.google.com/store/apps/" + prefix + packageName,
+                    context.getString(R.string.open_play_store));
+        }
+    }
+
+    public static void sendEmail(Context context, String subject, String msg) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "simonpham.dn@gmail.com", null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, msg);
+        if (context != null) {
+            context.startActivity(Intent.createChooser(emailIntent, "Send email..."));
+        }
     }
 }

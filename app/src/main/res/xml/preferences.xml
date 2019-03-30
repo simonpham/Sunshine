@@ -31,6 +31,20 @@
             app:key="feedback"
             app:summary="Report technical issues or suggest new features"
             app:title="Send feedback" />
+
+        <androidx.preference.Preference
+            app:key="repository"
+            app:summary="Sunshine's source code will be public after assignment graded"
+            app:title="Fork on GitHub" />
+
+        <androidx.preference.Preference
+            app:key="rate_us"
+            app:title="Rate us on Play Store" />
+
+        <androidx.preference.Preference
+            app:key="more_apps"
+            app:summary="Open developer page on Play Store"
+            app:title="More apps from developer" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
