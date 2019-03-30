@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
                     handler.post(new Runnable() {
                         public void run() {
                             errorLayout.setVisibility(View.VISIBLE);
-                            tvErrorMessage.setText("No network/City not found!");
+                            tvErrorMessage.setText(R.string.message_error_empty_response);
                             swipeRefreshLayout.setRefreshing(false);
                         }
                     });
@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
         } else {
             errorLayout.setVisibility(View.VISIBLE);
-            tvErrorMessage.setText("An error has occurred!");
+            tvErrorMessage.setText(R.string.message_error_empty_response);
         }
 
     }

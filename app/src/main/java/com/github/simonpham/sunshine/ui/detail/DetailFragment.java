@@ -34,6 +34,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.github.simonpham.sunshine.Consts.EXTRA_FORECAST_ID;
+
 /**
  * Created by Simon Pham on 3/10/19.
  * Email: simonpham.dn@gmail.com
@@ -85,7 +87,7 @@ public class DetailFragment extends Fragment {
         });
 
 
-        int forecastId = Objects.requireNonNull(getArguments()).getInt("forecastId", 0);
+        int forecastId = Objects.requireNonNull(getArguments()).getInt(EXTRA_FORECAST_ID, 0);
         forecast = SingletonIntances.getForecasts().get(forecastId);
 
         String displayDate = Utils.getDayName(getContext(), forecast.getDate());
@@ -95,20 +97,20 @@ public class DetailFragment extends Fragment {
         tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
         ivIcon.setImageResource(Utils.getArtResourceForWeatherCondition(forecast.getWeather().getId()));
 
-        forecastDetails.add(new ItemInfo("Humidity", forecast.getMain().getHumidity() + "%"));
-        forecastDetails.add(new ItemInfo("Pressure", forecast.getMain().getPressure() + "hPa"));
+        forecastDetails.add(new ItemInfo(getString(R.string.title_humidity), forecast.getMain().getHumidity() + "%"));
+        forecastDetails.add(new ItemInfo(getString(R.string.title_pressure), forecast.getMain().getPressure() + "hPa"));
 
         if (forecast.getClouds() != null) {
-            forecastDetails.add(new ItemInfo("Clouds", forecast.getClouds().getAll() + "%"));
+            forecastDetails.add(new ItemInfo(getString(R.string.title_cloud), forecast.getClouds().getAll() + "%"));
         }
         if (forecast.getWind() != null) {
-            forecastDetails.add(new ItemInfo("Wind", forecast.getWind().getDeg() + "° - " + forecast.getWind().getSpeed() + "m/s"));
+            forecastDetails.add(new ItemInfo(getString(R.string.title_wind), forecast.getWind().getDeg() + "° - " + forecast.getWind().getSpeed() + "m/s"));
         }
         if (forecast.getRain() != null) {
-            forecastDetails.add(new ItemInfo("Rain", forecast.getRain().getVolumn() + "mm"));
+            forecastDetails.add(new ItemInfo(getString(R.string.title_rain), forecast.getRain().getVolumn() + "mm"));
         }
         if (forecast.getSnow() != null) {
-            forecastDetails.add(new ItemInfo("Snow", forecast.getSnow().getVolumn() + "mm"));
+            forecastDetails.add(new ItemInfo(getString(R.string.title_snow), forecast.getSnow().getVolumn() + "mm"));
         }
 
         adapter = new ForecastDetailsAdapter(getContext(), forecastDetails);

@@ -13,6 +13,8 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import static com.github.simonpham.sunshine.Consts.KEY_CURRENT_LOCATION;
+
 /**
  * Created by Simon Pham on 3/24/19.
  * Email: simonpham.dn@gmail.com
@@ -40,12 +42,12 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Sha
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onSharedPreferenceChanged(SingletonIntances.getSharedPrefs().getPrefs(), getString(R.string.pref_current_location));
+        onSharedPreferenceChanged(SingletonIntances.getSharedPrefs().getPrefs(), KEY_CURRENT_LOCATION);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_current_location))) {
+        if (key.equals(KEY_CURRENT_LOCATION)) {
             Preference pref = findPreference(key);
             pref.setSummary(((EditTextPreference) pref).getText());
         }
