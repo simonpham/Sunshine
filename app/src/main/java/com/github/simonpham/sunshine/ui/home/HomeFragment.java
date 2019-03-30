@@ -143,7 +143,6 @@ public class HomeFragment extends Fragment {
         if (forecasts != null && !forecasts.isEmpty()) {
             errorLayout.setVisibility(View.GONE);
             adapter.setData(forecasts);
-            adapter.notifyDataSetChanged();
         } else {
             errorLayout.setVisibility(View.VISIBLE);
             tvErrorMessage.setText(R.string.message_error_json);

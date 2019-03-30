@@ -65,7 +65,10 @@ public class DetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Toolbar toolbar = view.findViewById(R.id.toolBar);
-        toolbar.setOverflowIcon(ResourcesCompat.getDrawable(this.getResources(), R.drawable.ic_dots_vertical_24dp, null));
+        toolbar.setOverflowIcon(
+                ResourcesCompat.getDrawable(
+                        getResources(),
+                        R.drawable.ic_dots_vertical_24dp, null));
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
@@ -91,7 +94,15 @@ public class DetailFragment extends Fragment {
         forecast = SingletonIntances.getForecasts().get(forecastId);
 
         String displayDate = Utils.getDayName(getContext(), forecast.getDate());
-        toolbar.setTitle(String.format("%s, %s", displayDate, new SimpleDateFormat("MMMM dd", Locale.US).format(new Date(forecast.getDate() * 1000))));
+        if (activity != null) {
+            Objects.requireNonNull(
+                    activity.getSupportActionBar())
+                    .setTitle(String.format(
+                            "%s, %s"
+                            , displayDate,
+                            new SimpleDateFormat("MMMM dd", Locale.US)
+                                    .format(new Date(forecast.getDate() * 1000))));
+        }
         tvForecast.setText(forecast.getWeather().getDescription());
         tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
         tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));
@@ -101,16 +112,24 @@ public class DetailFragment extends Fragment {
         forecastDetails.add(new ItemInfo(getString(R.string.title_pressure), forecast.getMain().getPressure() + "hPa"));
 
         if (forecast.getClouds() != null) {
-            forecastDetails.add(new ItemInfo(getString(R.string.title_cloud), forecast.getClouds().getAll() + "%"));
+            forecastDetails.add(new ItemInfo(
+                    getString(R.string.title_cloud),
+                    forecast.getClouds().getAll() + "%"));
         }
         if (forecast.getWind() != null) {
-            forecastDetails.add(new ItemInfo(getString(R.string.title_wind), forecast.getWind().getDeg() + "° - " + forecast.getWind().getSpeed() + "m/s"));
+            forecastDetails.add(new ItemInfo(
+                    getString(R.string.title_wind),
+                    forecast.getWind().getDeg() + "° - " + forecast.getWind().getSpeed() + "m/s"));
         }
         if (forecast.getRain() != null) {
-            forecastDetails.add(new ItemInfo(getString(R.string.title_rain), forecast.getRain().getVolumn() + "mm"));
+            forecastDetails.add(new ItemInfo(
+                    getString(R.string.title_rain),
+                    forecast.getRain().getVolumn() + "mm"));
         }
         if (forecast.getSnow() != null) {
-            forecastDetails.add(new ItemInfo(getString(R.string.title_snow), forecast.getSnow().getVolumn() + "mm"));
+            forecastDetails.add(new ItemInfo(
+                    getString(R.string.title_snow),
+                    forecast.getSnow().getVolumn() + "mm"));
         }
 
         adapter = new ForecastDetailsAdapter(getContext(), forecastDetails);
