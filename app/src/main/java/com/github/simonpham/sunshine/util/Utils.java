@@ -4,12 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.model.Forecast;
+import com.github.simonpham.sunshine.worker.NotificationWorker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 /**
  * Created by Simon Pham on 3/3/19.
@@ -193,5 +199,16 @@ public class Utils {
         sendIntent.putExtra(Intent.EXTRA_TEXT, forecast.toString());
         sendIntent.setType("text/plain");
         context.startActivity(sendIntent);
+    }
+
+    public static void setupNotificationRequest() {
+        SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
+
+        PeriodicWorkRequest notificationRequest = new PeriodicWorkRequest
+                .Builder(NotificationWorker.class, sharedPrefs.getUpdateInterval(), TimeUnit.MINUTES)
+                .build();
+
+        WorkManager.getInstance().cancelAllWork();
+        WorkManager.getInstance().enqueue(notificationRequest);
     }
 }

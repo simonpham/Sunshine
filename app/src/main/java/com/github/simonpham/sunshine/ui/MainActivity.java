@@ -10,6 +10,7 @@ import com.github.simonpham.sunshine.R;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static com.github.simonpham.sunshine.Consts.NOTIFICATION_CHANNEL_ID;
+import static com.github.simonpham.sunshine.util.Utils.setupNotificationRequest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         createNotificationChannel();
+        setupNotificationRequest();
     }
 
     private void createNotificationChannel() {

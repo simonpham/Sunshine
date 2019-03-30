@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import static com.github.simonpham.sunshine.Consts.DEFAULT_CITY;
 import static com.github.simonpham.sunshine.Consts.KEY_CURRENT_LOCATION;
 import static com.github.simonpham.sunshine.Consts.KEY_LAST_WEATHER_DATA;
+import static com.github.simonpham.sunshine.Consts.KEY_UPDATE_INTERVAL;
 import static com.github.simonpham.sunshine.Consts.KEY_USE_CELSIUS;
 import static com.github.simonpham.sunshine.Consts.PACKAGE_NAME;
 
@@ -33,6 +34,10 @@ public class SharedPrefs {
         return prefs.getString(KEY_CURRENT_LOCATION, DEFAULT_CITY);
     }
 
+    public void setCity(String city) {
+        prefs.edit().putString(KEY_CURRENT_LOCATION, city).apply();
+    }
+
     public String getMetric() {
         return prefs.getBoolean(KEY_USE_CELSIUS, true) ? "metric" : "imperial";
     }
@@ -41,8 +46,8 @@ public class SharedPrefs {
         return prefs.getBoolean(KEY_USE_CELSIUS, true) ? "C" : "F";
     }
 
-    public void setCity(String city) {
-        prefs.edit().putString(KEY_CURRENT_LOCATION, city).apply();
+    public int getUpdateInterval() {
+        return Integer.parseInt(prefs.getString(KEY_UPDATE_INTERVAL, "30"));
     }
 
     public JSONObject getLastWeatherData() {
