@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">Sunshine</string>
+
+    <string name="default_city">Ho Chi Minh City, VN</string>
+
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+
+    <string name="open_play_store">Open Play Store</string>
+    <string name="feedback_email_subject">Sunshine app\'s Feedback</string>
+
+    <string name="title_action_details">Details</string>
+    <string name="title_action_refresh">Refresh</string>
+    <string name="title_action_settings">Settings</string>
+    <string name="title_action_share">Share</string>
+
+    <string name="title_pref_category_appearance">Appearance settings</string>
+    <string name="title_pref_category_weather_settings">Weather settings</string>
+    <string name="title_pref_category_other_settings">Others</string>
+
+    <string name="title_pref_use_celsius">Use Celsius unit</string>
+    <string name="title_pref_custom_location">Custom location</string>
+    <string name="title_pref_update_interval">Update interval</string>
+    <string name="title_pref_send_feedback">Send feedback</string>
+    <string name="title_pref_fork_on_github">Fork on GitHub</string>
+    <string name="title_pref_rate_us">Rate us on Play Store</string>
+    <string name="title_pref_more_apps">More apps from developer</string>
+
+    <string name="title_pref_send_feedback_summary">Report technical issues or suggest new features</string>
+    <string name="title_pref_fork_on_github_summary">Sunshine\'s source code will be public after assignment graded</string>
+    <string name="title_pref_rate_us_summary">Give us 5★</string>
+    <string name="title_pref_more_apps_summary">Open developer page on Play Store</string>
+
+    <string name="title_humidity">Humidity</string>
+    <string name="title_pressure">Pressure</string>
+    <string name="title_cloud">Clouds</string>
+    <string name="title_wind">Wind</string>
+    <string name="title_rain">Rain</string>
+    <string name="title_snow">Snow</string>
+
+    <string name="message_error_empty_response">Please make sure your have a working Internet connection and the city name is entered correctly then try again!</string>
+    <string name="message_error_json">An error has occurred!</string>
+
+    <string name="notification_channel_name">Weather notification</string>
+    <string name="notification_channel_description">Notify today\'s weather condition</string>
+
+    <string name="notification_content_storm">There\'s gonna be a storm outside. Better stay home today!</string>
+    <string name="notification_content_light_rain">Don\'t forget to bring an umbrella with you</string>
+    <string name="notification_content_rain">Don\'t forget to bring an umbrella with you</string>
+    <string name="notification_content_fog">Drive safe</string>
+    <string name="notification_content_clear">What a beautiful day! Let\'s go to the park!</string>
+    <string name="notification_content_light_cloud">What a beautiful day! Let\'s go to the park!</string>
+    <string name="notification_content_cloudy">Cloudy with a chance of… meatballs?</string>
+    <string name="notification_content_snow">Remember to put on warm clothes before going out</string>
+
+    <string name="notification_content_storm_tomorrow">There will be a storm tomorrow! Be prepared!</string>
+    <string name="notification_content_light_rain_tomorrow">Don\'t forget to bring an umbrella with you</string>
+    <string name="notification_content_rain_tomorrow">Don\'t forget to bring an umbrella with you</string>
+    <string name="notification_content_fog_tomorrow">It\'ll be foggy tomorrow. Drive safe</string>
+    <string name="notification_content_clear_tomorrow">The sun will shine tomorrow! It\'s gonna be a wonderful day!</string>
+    <string name="notification_content_light_cloud_tomorrow">The sun will shine tomorrow! It\'s gonna be a wonderful day!</string>
+    <string name="notification_content_cloudy_tomorrow">Cloudy with a chance of… meatballs?</string>
+    <string name="notification_content_snow_tomorrow">It\'s getting cold. Get your warm clothes ready!</string>
 </resources>
