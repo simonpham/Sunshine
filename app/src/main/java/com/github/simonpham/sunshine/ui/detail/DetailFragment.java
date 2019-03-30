@@ -89,7 +89,7 @@ public class DetailFragment extends Fragment {
         forecast = SingletonIntances.getForecasts().get(forecastId);
 
         String displayDate = Utils.getDayName(getContext(), forecast.getDate());
-        toolbar.setTitle(String.format("%s, %s", displayDate, new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(forecast.getDate() * 1000))));
+        toolbar.setTitle(String.format("%s, %s", displayDate, new SimpleDateFormat("MMMM dd", Locale.US).format(new Date(forecast.getDate() * 1000))));
         tvForecast.setText(forecast.getWeather().getDescription());
         tvHigh.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMax()));
         tvLow.setText(String.format(Locale.US, "%.0f°", forecast.getMain().getTempMin()));

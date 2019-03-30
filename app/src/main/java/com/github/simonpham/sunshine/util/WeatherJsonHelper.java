@@ -41,7 +41,7 @@ public class WeatherJsonHelper {
 
                 String displayDate = Utils.getDayName(context, date);
                 if (displayDate.equals("Today")) {
-                    displayDate = String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000)));
+                    displayDate = String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.US).format(new Date(date * 1000)));
                 }
 
                 if (!day.equals(displayDate)) {

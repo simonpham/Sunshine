@@ -52,7 +52,7 @@ public class Utils {
         } else if (julianDay == currentJulianDay + 1) {
             return context.getString(R.string.tomorrow);
         } else {
-            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.US);
             return dayFormat.format(dateInMillis * 1000);
         }
     }

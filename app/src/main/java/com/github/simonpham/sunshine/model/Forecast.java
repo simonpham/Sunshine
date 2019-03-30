@@ -103,7 +103,7 @@ public class Forecast {
     public String toString() {
         return String.format(Locale.US, "Forecast for %s (%s):" + "\nWeather: %s" + "\nHighest temperature: %.0f°" + SingletonIntances.getSharedPrefs().getDisplayMetric() + "\nLowest temperature: %.0f°" + SingletonIntances.getSharedPrefs().getDisplayMetric() + "\nHumidity: %d%%" + "\nPressure (sea-level): %shPa" + "\nPressure (ground-level): %shPa" + "\nCloudiness: %s" + "\nWind: %s - %s" + "\nRain: %s" + "\nSnow: %s"
                 , getDisplayDate()
-                , new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(getDate() * 1000))
+                , new SimpleDateFormat("MMMM dd", Locale.US).format(new Date(getDate() * 1000))
                 , getWeather().getDescription()
                 , getMain().getTempMax()
                 , getMain().getTempMin()
