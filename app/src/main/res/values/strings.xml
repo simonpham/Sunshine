@@ -21,6 +21,15 @@
     <string name="title_pref_use_celsius">Use Celsius unit</string>
     <string name="title_pref_custom_location">Custom location</string>
     <string name="title_pref_update_interval">Update interval</string>
+    <string name="title_pref_send_feedback">Send feedback</string>
+    <string name="title_pref_fork_on_github">Fork on GitHub</string>
+    <string name="title_pref_rate_us">Rate us on Play Store</string>
+    <string name="title_pref_more_apps">More apps from developer</string>
+
+    <string name="title_pref_send_feedback_summary">Report technical issues or suggest new features</string>
+    <string name="title_pref_fork_on_github_summary">Sunshine\'s source code will be public after assignment graded</string>
+    <string name="title_pref_rate_us_summary">Give us 5★</string>
+    <string name="title_pref_more_apps_summary">Open developer page on Play Store</string>
 
     <string name="title_humidity">Humidity</string>
     <string name="title_pressure">Pressure</string>

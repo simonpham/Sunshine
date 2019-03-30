@@ -29,22 +29,23 @@
 
         <androidx.preference.Preference
             app:key="feedback"
-            app:summary="Report technical issues or suggest new features"
-            app:title="Send feedback" />
+            app:summary="@string/title_pref_send_feedback_summary"
+            app:title="@string/title_pref_send_feedback" />
 
         <androidx.preference.Preference
             app:key="repository"
-            app:summary="Sunshine's source code will be public after assignment graded"
-            app:title="Fork on GitHub" />
+            app:summary="@string/title_pref_fork_on_github_summary"
+            app:title="@string/title_pref_fork_on_github" />
 
         <androidx.preference.Preference
             app:key="rate_us"
-            app:title="Rate us on Play Store" />
+            app:summary="@string/title_pref_rate_us_summary"
+            app:title="@string/title_pref_rate_us" />
 
         <androidx.preference.Preference
             app:key="more_apps"
-            app:summary="Open developer page on Play Store"
-            app:title="More apps from developer" />
+            app:summary="@string/title_pref_more_apps_summary"
+            app:title="@string/title_pref_more_apps" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
