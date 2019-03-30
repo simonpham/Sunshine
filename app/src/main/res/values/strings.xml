@@ -6,10 +6,19 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
 
-    <string name="title_details">Details</string>
-    <string name="title_refresh">Refresh</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_share">Share</string>
+    <string name="title_action_details">Details</string>
+    <string name="title_action_refresh">Refresh</string>
+    <string name="title_action_settings">Settings</string>
+    <string name="title_action_share">Share</string>
+
+    <string name="title_pref_category_appearance">Appearance settings</string>
+    <string name="title_pref_category_weather_settings">Weather settings</string>
+    <string name="title_pref_category_other_settings">Other settings</string>
+
+    <string name="title_pref_use_celsius">Use Celsius unit</string>
+    <string name="title_pref_custom_location">Custom location</string>
+    <string name="title_pref_update_interval">Update interval</string>
+
     <string name="title_humidity">Humidity</string>
     <string name="title_pressure">Pressure</string>
     <string name="title_cloud">Clouds</string>
