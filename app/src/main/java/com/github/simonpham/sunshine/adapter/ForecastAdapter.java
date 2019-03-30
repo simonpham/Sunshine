@@ -101,4 +101,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     public int getItemCount() {
         return forecasts.size();
     }
+
+    public void setData(List<Forecast> data) {
+        this.forecasts = data;
+        this.notifyDataSetChanged();
+    }
 }
