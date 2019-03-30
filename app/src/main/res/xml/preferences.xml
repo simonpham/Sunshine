@@ -22,7 +22,7 @@
             app:entries="@array/update_intervals"
             app:entryValues="@array/update_interval_values"
             app:key="update_interval"
-            app:title="title_pref_update_interval" />
+            app:title="@string/title_pref_update_interval" />
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory app:title="@string/title_pref_category_other_settings">
