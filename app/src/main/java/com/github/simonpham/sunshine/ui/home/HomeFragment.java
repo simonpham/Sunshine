@@ -17,23 +17,12 @@ import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.adapter.ForecastAdapter;
 import com.github.simonpham.sunshine.data.RemoteFetch;
-import com.github.simonpham.sunshine.model.Clouds;
 import com.github.simonpham.sunshine.model.Forecast;
-import com.github.simonpham.sunshine.model.Main;
-import com.github.simonpham.sunshine.model.Rain;
-import com.github.simonpham.sunshine.model.Snow;
-import com.github.simonpham.sunshine.model.Weather;
-import com.github.simonpham.sunshine.model.Wind;
 import com.github.simonpham.sunshine.util.SharedPrefs;
-import com.github.simonpham.sunshine.util.Utils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +33,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import static com.github.simonpham.sunshine.util.WeatherJsonHelper.setWeatherDataFromJson;
 
 
 /**
@@ -66,7 +57,7 @@ public class HomeFragment extends Fragment {
 
     private Handler handler;
 
-    SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
+    private SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
 
     public HomeFragment() {
         handler = new Handler();
@@ -129,7 +120,8 @@ public class HomeFragment extends Fragment {
                     handler.post(new Runnable() {
                         public void run() {
                             errorLayout.setVisibility(View.VISIBLE);
-                            tvErrorMessage.setText("No network/City not found!");
+                            tvErrorMessage.setText(R.string.message_error_empty_response);
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
                 } else {
@@ -138,88 +130,24 @@ public class HomeFragment extends Fragment {
                         public void run() {
                             sharedPrefs.setLastWeatherData(finalJson);
                             renderWeather(finalJson);
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
                 }
-                swipeRefreshLayout.setRefreshing(false);
             }
         }.start();
     }
 
     private void renderWeather(JSONObject json) {
-        try {
-            forecasts.clear();
-            JSONObject city = json.getJSONObject("city");
-            JSONArray forecastList = json.getJSONArray("list");
-            int i;
-
-            String day = "";
-            for (i = 0; i < forecastList.length(); i++) {
-                JSONObject obj = forecastList.getJSONObject(i);
-
-                long date = obj.getLong("dt");
-
-                String displayDate = Utils.getDayName(getContext(), date);
-                if (displayDate.equals("Today")) {
-                    displayDate = String.format("Today, %s", new SimpleDateFormat("MMMM dd", Locale.getDefault()).format(new Date(date * 1000)));
-                }
-
-                if (!day.equals(displayDate)) {
-                    JSONObject objMain = obj.getJSONObject("main");
-                    JSONObject objWeather = obj.getJSONArray("weather").getJSONObject(0);
-                    JSONObject objClouds = obj.optJSONObject("clouds");
-                    JSONObject objWind = obj.optJSONObject("wind");
-                    JSONObject objRain = obj.optJSONObject("rain");
-                    JSONObject objSnow = obj.optJSONObject("snow");
-
-                    Main main = new Main(
-                            objMain.getDouble("temp"),
-                            objMain.getDouble("temp_min"),
-                            objMain.getDouble("temp_max"),
-                            objMain.getDouble("pressure"),
-                            objMain.getDouble("sea_level"),
-                            objMain.getDouble("grnd_level"),
-                            objMain.getInt("humidity")
-                    );
-
-                    String desc = objWeather.getString("description");
-                    String descUppercase = desc.substring(0, 1).toUpperCase().concat(desc.substring(1));
-
-                    Weather weather = new Weather(
-                            objWeather.getInt("id"),
-                            objWeather.getString("main"),
-                            descUppercase,
-                            objWeather.getString("icon")
-                    );
-
-                    Clouds clouds = objClouds != null ?
-                            new Clouds(objClouds.optInt("all", 0)) : null;
-                    Wind wind = objWind != null ?
-                            new Wind(objWind.optDouble("speed", 0.0),
-                                    objWind.optDouble("deg", 0.0)) : null;
-                    Rain rain = objRain != null ? new Rain(
-                            objRain.optDouble("volumn", 0.0)) : null;
-                    Snow snow = objSnow != null ? new Snow(
-                            objSnow.optDouble("volumn", 0.0)) : null;
-
-                    Forecast forecast = new Forecast(date, main, weather, clouds, wind, rain, snow, displayDate);
-
-                    forecasts.add(forecast);
-                }
-
-                day = displayDate;
-            }
-
-            SingletonIntances.setForecasts(forecasts);
-
+        List<Forecast> forecasts = setWeatherDataFromJson(getContext(), json);
+        if (forecasts != null && !forecasts.isEmpty()) {
             errorLayout.setVisibility(View.GONE);
-            adapter.notifyDataSetChanged();
-
-        } catch (Exception e) {
-            // error
+            adapter.setData(forecasts);
+        } else {
             errorLayout.setVisibility(View.VISIBLE);
-            tvErrorMessage.setText(String.format("Error: %s", e.getMessage()));
+            tvErrorMessage.setText(R.string.message_error_json);
         }
+
     }
 
     @Override

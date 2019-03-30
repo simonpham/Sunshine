@@ -7,6 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.github.simonpham.sunshine.Consts.DEFAULT_CITY;
+import static com.github.simonpham.sunshine.Consts.KEY_CURRENT_LOCATION;
+import static com.github.simonpham.sunshine.Consts.KEY_LAST_WEATHER_DATA;
+import static com.github.simonpham.sunshine.Consts.KEY_UPDATE_INTERVAL;
+import static com.github.simonpham.sunshine.Consts.KEY_USE_CELSIUS;
 import static com.github.simonpham.sunshine.Consts.PACKAGE_NAME;
 
 /**
@@ -27,23 +31,27 @@ public class SharedPrefs {
     }
 
     public String getCity() {
-        return prefs.getString("current_location", DEFAULT_CITY);
-    }
-
-    public String getMetric() {
-        return prefs.getBoolean("use_celsius", true) ? "metric" : "imperial";
-    }
-
-    public String getDisplayMetric() {
-        return prefs.getBoolean("use_celsius", true) ? "C" : "F";
+        return prefs.getString(KEY_CURRENT_LOCATION, DEFAULT_CITY);
     }
 
     public void setCity(String city) {
-        prefs.edit().putString("current_location", city).apply();
+        prefs.edit().putString(KEY_CURRENT_LOCATION, city).apply();
+    }
+
+    public String getMetric() {
+        return prefs.getBoolean(KEY_USE_CELSIUS, true) ? "metric" : "imperial";
+    }
+
+    public String getDisplayMetric() {
+        return prefs.getBoolean(KEY_USE_CELSIUS, true) ? "C" : "F";
+    }
+
+    public int getUpdateInterval() {
+        return Integer.parseInt(prefs.getString(KEY_UPDATE_INTERVAL, "30"));
     }
 
     public JSONObject getLastWeatherData() {
-        String strJson = prefs.getString("last_weather_data", "0");
+        String strJson = prefs.getString(KEY_LAST_WEATHER_DATA, "0");
         JSONObject weatherData = new JSONObject();
         try {
             weatherData = new JSONObject(strJson);
@@ -55,7 +63,7 @@ public class SharedPrefs {
     }
 
     public void setLastWeatherData(JSONObject jsonObject) {
-        prefs.edit().putString("last_weather_data", jsonObject.toString()).apply();
+        prefs.edit().putString(KEY_LAST_WEATHER_DATA, jsonObject.toString()).apply();
     }
 
 }

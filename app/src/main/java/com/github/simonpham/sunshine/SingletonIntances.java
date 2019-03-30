@@ -9,6 +9,8 @@ import com.github.simonpham.sunshine.util.SharedPrefs;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.NotificationManagerCompat;
+
 /**
  * Created by Simon Pham on 3/10/19.
  * Email: simonpham.dn@gmail.com
@@ -21,6 +23,7 @@ public class SingletonIntances {
     private List<Forecast> forecasts = new ArrayList<>();
 
     private SharedPrefs sharedPrefs = null;
+    private NotificationManagerCompat notificationManager;
 
     private SingletonIntances() {
     }
@@ -31,6 +34,8 @@ public class SingletonIntances {
                 INSTANCE = new SingletonIntances();
             }
             INSTANCE.sharedPrefs = new SharedPrefs((Application) context);
+            INSTANCE.notificationManager = NotificationManagerCompat.from(context);
+
             initialized = true;
         }
     }
@@ -45,5 +50,9 @@ public class SingletonIntances {
 
     public static SharedPrefs getSharedPrefs() {
         return INSTANCE.sharedPrefs;
+    }
+
+    public static NotificationManagerCompat getNotiManager() {
+        return INSTANCE.notificationManager;
     }
 }

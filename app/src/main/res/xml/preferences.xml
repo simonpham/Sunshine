@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.preference.SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="use_celsius"
-        app:title="Use Celsius unit" />
+    <androidx.preference.PreferenceCategory app:title="@string/title_pref_category_appearance">
 
-    <androidx.preference.EditTextPreference
-        app:defaultValue="@string/default_city"
-        app:key="current_location"
-        app:summary="@string/default_city"
-        app:title="Custom location" />
+        <androidx.preference.SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="use_celsius"
+            app:title="@string/title_pref_use_celsius" />
+    </androidx.preference.PreferenceCategory>
 
-    <androidx.preference.Preference
-        app:key="feedback"
-        app:summary="Report technical issues or suggest new features"
-        app:title="Send feedback" />
+    <androidx.preference.PreferenceCategory app:title="@string/title_pref_category_weather_settings">
+
+        <androidx.preference.EditTextPreference
+            app:defaultValue="@string/default_city"
+            app:key="current_location"
+            app:summary="@string/default_city"
+            app:title="@string/title_pref_custom_location" />
+
+        <androidx.preference.ListPreference
+            app:defaultValue="30"
+            app:entries="@array/update_intervals"
+            app:entryValues="@array/update_interval_values"
+            app:key="update_interval"
+            app:title="@string/title_pref_update_interval" />
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory app:title="@string/title_pref_category_other_settings">
+
+        <androidx.preference.Preference
+            app:key="feedback"
+            app:summary="@string/title_pref_send_feedback_summary"
+            app:title="@string/title_pref_send_feedback" />
+
+        <androidx.preference.Preference
+            app:key="repository"
+            app:summary="@string/title_pref_fork_on_github_summary"
+            app:title="@string/title_pref_fork_on_github" />
+
+        <androidx.preference.Preference
+            app:key="rate_us"
+            app:summary="@string/title_pref_rate_us_summary"
+            app:title="@string/title_pref_rate_us" />
+
+        <androidx.preference.Preference
+            app:key="more_apps"
+            app:summary="@string/title_pref_more_apps_summary"
+            app:title="@string/title_pref_more_apps" />
+    </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

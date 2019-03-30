@@ -82,8 +82,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:gravity="center"
-                android:maxLines="4"
-                android:minLines="0"
                 android:paddingLeft="@dimen/margin_huge"
                 android:paddingRight="@dimen/margin_huge"
                 android:textColor="?android:textColorPrimary"
@@ -96,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                android:text="@string/title_refresh" />
+                android:text="@string/title_action_refresh" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

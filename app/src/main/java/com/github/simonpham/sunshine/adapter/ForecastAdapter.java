@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.github.simonpham.sunshine.Consts.EXTRA_FORECAST_ID;
+
 /**
  * Created by Simon Pham on 3/3/19.
  * Email: simonpham.dn@gmail.com
@@ -83,7 +85,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("forecastId", position);
+                bundle.putInt(EXTRA_FORECAST_ID, position);
                 Navigation.findNavController(v).navigate(R.id.actionShowDetail, bundle);
             }
         });
@@ -100,5 +102,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
     @Override
     public int getItemCount() {
         return forecasts.size();
+    }
+
+    public void setData(List<Forecast> data) {
+        this.forecasts = data;
+        this.notifyDataSetChanged();
     }
 }
