@@ -57,26 +57,33 @@ public class NotificationWorker extends Worker {
 
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+        String day = " weather today!";
 
         if (timeOfDay >= 21 && timeOfDay < 24) {
             // notify forecast for tomorrow
             forecast = forecasts.get(0);
+            day = " weather tomorrow!";
         } else {
             // notify forecast for today
             forecast = forecasts.get(1);
         }
 
         String weatherCondition = forecast.getWeather().getDescription();
-        String weatherMaxTemp = String.format(Locale.US,
-                "%.0f°", forecast.getMain().getTempMax());
-        String weatherMinTemp = String.format(Locale.US,
-                "%.0f°", forecast.getMain().getTempMin());
+        String weatherTemp = String.format(Locale.US,
+                "%.0f°", forecast.getMain().getTemp());
+
+        String subText = sharedPrefs.getCity() +
+                " • " +
+                weatherTemp +
+                sharedPrefs.getDisplayMetric();
+        String contentTitle = weatherCondition + day;
+        String contentText = "Let's go to the park and code!";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(weatherCondition + " weather today!")
-                .setContentText("Let's go to the park and code!")
-                .setSubText(weatherMaxTemp + " - " + weatherMinTemp)
+                .setContentTitle(contentTitle)
+                .setContentText(contentText)
+                .setSubText(subText)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         SingletonIntances.getNotiManager().notify(0, builder.build());
         return Result.success();
