@@ -1,10 +1,13 @@
 package com.github.simonpham.sunshine.worker;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.data.RemoteFetch;
 import com.github.simonpham.sunshine.model.Forecast;
+import com.github.simonpham.sunshine.ui.MainActivity;
 import com.github.simonpham.sunshine.util.SharedPrefs;
 
 import org.json.JSONObject;
@@ -97,11 +100,17 @@ public class NotificationWorker extends Worker {
 
         String contentText = context.getString(contentResource);
 
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(getIconResourceForWeatherCondition(weatherId))
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 .setSubText(subText)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         SingletonIntances.getNotiManager().notify(0, builder.build());
         return Result.success();
