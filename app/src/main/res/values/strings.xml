@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sunshine</string>
 
-    <string name="default_city">Ho Chi Minh City, VN</string>
+    <string name="default_city">Ho Chi Minh City</string>
 
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
