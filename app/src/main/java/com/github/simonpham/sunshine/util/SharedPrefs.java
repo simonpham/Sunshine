@@ -55,9 +55,8 @@ public class SharedPrefs {
         JSONObject weatherData = new JSONObject();
         try {
             weatherData = new JSONObject(strJson);
-
         } catch (JSONException ignored) {
-
+            return null;
         }
         return weatherData;
     }
