@@ -128,7 +128,6 @@ public class HomeFragment extends Fragment {
                     final JSONObject finalJson = json;
                     handler.post(new Runnable() {
                         public void run() {
-                            sharedPrefs.setLastWeatherData(finalJson);
                             renderWeather(finalJson);
                             swipeRefreshLayout.setRefreshing(false);
                         }
