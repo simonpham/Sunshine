@@ -112,9 +112,9 @@ public class HomeFragment extends Fragment {
     private void updateWeatherData() {
         new Thread() {
             public void run() {
-                JSONObject json = RemoteFetch.getJSON(getActivity());
+                JSONObject json = sharedPrefs.getLastWeatherData();
                 if (json == null) {
-                    json = sharedPrefs.getLastWeatherData();
+                    json = RemoteFetch.getJSON(getActivity());
                 }
                 if (json == null) {
                     handler.post(new Runnable() {
@@ -128,7 +128,6 @@ public class HomeFragment extends Fragment {
                     final JSONObject finalJson = json;
                     handler.post(new Runnable() {
                         public void run() {
-                            sharedPrefs.setLastWeatherData(finalJson);
                             renderWeather(finalJson);
                             swipeRefreshLayout.setRefreshing(false);
                         }

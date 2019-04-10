@@ -28,6 +28,7 @@ public class WeatherJsonHelper {
 
     public static List<Forecast> setWeatherDataFromJson(Context context, JSONObject json) {
         try {
+            SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
             List<Forecast> forecasts = new ArrayList<>();
             JSONObject city = json.getJSONObject("city");
             JSONArray forecastList = json.getJSONArray("list");
@@ -91,6 +92,7 @@ public class WeatherJsonHelper {
             }
 
             SingletonIntances.setForecasts(forecasts);
+            sharedPrefs.setLastWeatherData(json);
             return forecasts;
         } catch (Exception e) {
             // error

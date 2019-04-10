@@ -18,7 +18,7 @@
             app:title="@string/title_pref_custom_location" />
 
         <androidx.preference.ListPreference
-            app:defaultValue="30"
+            app:defaultValue="120"
             app:entries="@array/update_intervals"
             app:entryValues="@array/update_interval_values"
             app:key="update_interval"

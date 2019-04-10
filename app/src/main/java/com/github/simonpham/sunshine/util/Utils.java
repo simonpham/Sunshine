@@ -136,64 +136,6 @@ public class Utils {
         return -1;
     }
 
-    public static int getStringResourceForTodayWeatherCondition(int weatherId) {
-        // Based on weather code data found at:
-        // https://openweathermap.org/weather-conditions
-        if (weatherId >= 200 && weatherId <= 232) {
-            return R.string.notification_content_storm;
-        } else if (weatherId >= 300 && weatherId <= 321) {
-            return R.string.notification_content_light_rain;
-        } else if (weatherId >= 500 && weatherId <= 504) {
-            return R.string.notification_content_rain;
-        } else if (weatherId == 511) {
-            return R.string.notification_content_snow;
-        } else if (weatherId >= 520 && weatherId <= 531) {
-            return R.string.notification_content_rain;
-        } else if (weatherId >= 600 && weatherId <= 622) {
-            return R.string.notification_content_snow;
-        } else if (weatherId >= 701 && weatherId <= 761) {
-            return R.string.notification_content_fog;
-        } else if (weatherId == 771 || weatherId == 781) {
-            return R.string.notification_content_storm;
-        } else if (weatherId == 800) {
-            return R.string.notification_content_clear;
-        } else if (weatherId == 801) {
-            return R.string.notification_content_light_cloud;
-        } else if (weatherId >= 802 && weatherId <= 804) {
-            return R.string.notification_content_cloudy;
-        }
-        return -1;
-    }
-
-    public static int getStringResourceForTomorrowWeatherCondition(int weatherId) {
-        // Based on weather code data found at:
-        // https://openweathermap.org/weather-conditions
-        if (weatherId >= 200 && weatherId <= 232) {
-            return R.string.notification_content_storm_tomorrow;
-        } else if (weatherId >= 300 && weatherId <= 321) {
-            return R.string.notification_content_light_rain_tomorrow;
-        } else if (weatherId >= 500 && weatherId <= 504) {
-            return R.string.notification_content_rain_tomorrow;
-        } else if (weatherId == 511) {
-            return R.string.notification_content_snow_tomorrow;
-        } else if (weatherId >= 520 && weatherId <= 531) {
-            return R.string.notification_content_rain_tomorrow;
-        } else if (weatherId >= 600 && weatherId <= 622) {
-            return R.string.notification_content_snow_tomorrow;
-        } else if (weatherId >= 701 && weatherId <= 761) {
-            return R.string.notification_content_fog_tomorrow;
-        } else if (weatherId == 771 || weatherId == 781) {
-            return R.string.notification_content_storm_tomorrow;
-        } else if (weatherId == 800) {
-            return R.string.notification_content_clear_tomorrow;
-        } else if (weatherId == 801) {
-            return R.string.notification_content_light_cloud_tomorrow;
-        } else if (weatherId >= 802 && weatherId <= 804) {
-            return R.string.notification_content_cloudy_tomorrow;
-        }
-        return -1;
-    }
-
     public static void shareForecast(Context context, Forecast forecast) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);

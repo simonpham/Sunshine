@@ -12,7 +12,6 @@ import com.github.simonpham.sunshine.util.SharedPrefs;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,8 +22,6 @@ import androidx.work.WorkerParameters;
 
 import static com.github.simonpham.sunshine.Consts.NOTIFICATION_CHANNEL_ID;
 import static com.github.simonpham.sunshine.util.Utils.getIconResourceForWeatherCondition;
-import static com.github.simonpham.sunshine.util.Utils.getStringResourceForTodayWeatherCondition;
-import static com.github.simonpham.sunshine.util.Utils.getStringResourceForTomorrowWeatherCondition;
 import static com.github.simonpham.sunshine.util.WeatherJsonHelper.setWeatherDataFromJson;
 
 /**
@@ -56,49 +53,20 @@ public class NotificationWorker extends Worker {
 
         List<Forecast> forecasts = setWeatherDataFromJson(context, json);
 
-        if (forecasts == null || forecasts.size() < 2) {
+        if (forecasts == null || forecasts.isEmpty()) {
             return Result.failure();
         }
 
-        Calendar c = Calendar.getInstance();
-        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
-        boolean isToday = true;
-
-        if (timeOfDay >= 21 && timeOfDay < 24) {
-            // notify forecast for tomorrow
-            forecast = forecasts.get(0);
-            isToday = false;
-        } else {
-            // notify forecast for today
-            forecast = forecasts.get(1);
-        }
+        forecast = forecasts.get(0);
 
         int weatherId = forecast.getWeather().getId();
         String weatherCondition = forecast.getWeather().getDescription();
         String weatherTemp = String.format(Locale.US,
                 "%.0f°", forecast.getMain().getTemp());
-        String weatherMaxTemp = String.format(Locale.US,
-                "%.0f°", forecast.getMain().getTempMax());
-        String weatherMinTemp = String.format(Locale.US,
-                "%.0f°", forecast.getMain().getTempMin());
 
-        String contentTitle = weatherCondition +
-                " • " +
-                weatherTemp +
-                sharedPrefs.getDisplayMetric() +
+        String contentTitle = weatherTemp +
                 " in " +
                 sharedPrefs.getCity();
-        String subText = weatherMaxTemp +
-                sharedPrefs.getDisplayMetric() +
-                " / " +
-                weatherMinTemp +
-                sharedPrefs.getDisplayMetric();
-
-        int contentResource = isToday
-                ? getStringResourceForTodayWeatherCondition(weatherId)
-                : getStringResourceForTomorrowWeatherCondition(weatherId);
-
-        String contentText = context.getString(contentResource);
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -107,8 +75,7 @@ public class NotificationWorker extends Worker {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(getIconResourceForWeatherCondition(weatherId))
                 .setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setSubText(subText)
+                .setContentText(weatherCondition)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
