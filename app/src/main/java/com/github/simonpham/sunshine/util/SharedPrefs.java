@@ -62,7 +62,8 @@ public class SharedPrefs {
     }
 
     public void setLastWeatherData(JSONObject jsonObject) {
-        prefs.edit().putString(KEY_LAST_WEATHER_DATA, jsonObject.toString()).apply();
+        String newWeatherData = jsonObject != null ? jsonObject.toString() : null;
+        prefs.edit().putString(KEY_LAST_WEATHER_DATA, newWeatherData).apply();
     }
 
 }

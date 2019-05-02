@@ -4,15 +4,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
-import com.github.simonpham.sunshine.R;
-import com.github.simonpham.sunshine.SingletonIntances;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.github.simonpham.sunshine.R;
+import com.github.simonpham.sunshine.SingletonIntances;
+import com.github.simonpham.sunshine.util.SharedPrefs;
 
 import static com.github.simonpham.sunshine.Consts.DEVELOPER_ID;
 import static com.github.simonpham.sunshine.Consts.GITHUB_REPO;
@@ -23,6 +24,7 @@ import static com.github.simonpham.sunshine.Consts.KEY_RATE_US;
 import static com.github.simonpham.sunshine.Consts.KEY_REPOSITORY;
 import static com.github.simonpham.sunshine.Consts.KEY_UPDATE_ALL;
 import static com.github.simonpham.sunshine.Consts.KEY_UPDATE_INTERVAL;
+import static com.github.simonpham.sunshine.Consts.KEY_USE_CELSIUS;
 import static com.github.simonpham.sunshine.Consts.PACKAGE_NAME;
 import static com.github.simonpham.sunshine.util.Utils.openPlayStore;
 import static com.github.simonpham.sunshine.util.Utils.openUrl;
@@ -61,17 +63,38 @@ public class PreferencesFragment extends PreferenceFragmentCompat implements Sha
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (needUpdateWeatherData(key)) {
+            // remove saved weather data
+            SharedPrefs sharedPrefs = SingletonIntances.getSharedPrefs();
+            sharedPrefs.setLastWeatherData(null);
+        }
         if (key.equals(KEY_CURRENT_LOCATION) || key.equals(KEY_UPDATE_ALL)) {
-            Preference pref = findPreference(KEY_CURRENT_LOCATION);
-            pref.setSummary(((EditTextPreference) pref).getText());
+            updatePreferenceSummary(KEY_CURRENT_LOCATION);
         }
         if (key.equals(KEY_UPDATE_INTERVAL) || key.equals(KEY_UPDATE_ALL)) {
-            Preference pref = findPreference(KEY_UPDATE_INTERVAL);
-            pref.setSummary(((ListPreference) pref).getEntry());
+            updatePreferenceSummary(KEY_UPDATE_INTERVAL);
 
             if (key.equals(KEY_UPDATE_INTERVAL)) {
                 setupNotificationRequest();
             }
+        }
+    }
+
+    private boolean needUpdateWeatherData(String key) {
+        return key.equals(KEY_CURRENT_LOCATION) || key.equals(KEY_USE_CELSIUS);
+    }
+
+    private void updatePreferenceSummary(String key) {
+        Preference pref = findPreference(key);
+        if (pref != null) {
+            CharSequence summary = "";
+            if (pref instanceof ListPreference) {
+                summary = ((ListPreference) pref).getEntry();
+            }
+            if (pref instanceof EditTextPreference) {
+                summary = ((EditTextPreference) pref).getText();
+            }
+            pref.setSummary(summary);
         }
     }
 
