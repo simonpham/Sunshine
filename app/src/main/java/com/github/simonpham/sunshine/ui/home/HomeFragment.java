@@ -13,6 +13,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.github.simonpham.sunshine.R;
 import com.github.simonpham.sunshine.SingletonIntances;
 import com.github.simonpham.sunshine.adapter.ForecastAdapter;
@@ -24,16 +34,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import static com.github.simonpham.sunshine.util.WeatherJsonHelper.setWeatherDataFromJson;
 
 
@@ -42,6 +42,8 @@ import static com.github.simonpham.sunshine.util.WeatherJsonHelper.setWeatherDat
  * Email: simonpham.dn@gmail.com
  */
 public class HomeFragment extends Fragment {
+
+    private HomeFragment context;
 
     private Toolbar toolbar;
 
@@ -74,6 +76,8 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         super.onViewCreated(view, savedInstanceState);
 
+        context = this;
+
         toolbar = view.findViewById(R.id.toolBar);
         toolbar.setOverflowIcon(ResourcesCompat.getDrawable(this.getResources(), R.drawable.ic_dots_vertical_24dp, null));
 
@@ -89,9 +93,17 @@ public class HomeFragment extends Fragment {
         tvErrorMessage = view.findViewById(R.id.tvErrorMessage);
         reloadButton = view.findViewById(R.id.reloadButton);
 
+        swipeRefreshLayout.setRefreshing(true);
+
         adapter = new ForecastAdapter(this.getContext(), forecasts);
         rvForecast.setAdapter(adapter);
-        updateWeatherData();
+
+        JSONObject lastWeatherData = sharedPrefs.getLastWeatherData();
+        if (lastWeatherData != null) {
+            renderWeather(lastWeatherData);
+        } else {
+            updateWeatherData();
+        }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -103,25 +115,20 @@ public class HomeFragment extends Fragment {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                swipeRefreshLayout.setRefreshing(true);
                 updateWeatherData();
             }
         });
     }
 
     private void updateWeatherData() {
+        swipeRefreshLayout.setRefreshing(true);
         new Thread() {
             public void run() {
-                JSONObject json = sharedPrefs.getLastWeatherData();
-                if (json == null) {
-                    json = RemoteFetch.getJSON(getActivity());
-                }
+                JSONObject json = RemoteFetch.getJSON(getActivity());
                 if (json == null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            errorLayout.setVisibility(View.VISIBLE);
-                            tvErrorMessage.setText(R.string.message_error_empty_response);
-                            swipeRefreshLayout.setRefreshing(false);
+                            showError(context.getString(R.string.message_error_empty_response));
                         }
                     });
                 } else {
@@ -129,7 +136,6 @@ public class HomeFragment extends Fragment {
                     handler.post(new Runnable() {
                         public void run() {
                             renderWeather(finalJson);
-                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
                 }
@@ -142,11 +148,16 @@ public class HomeFragment extends Fragment {
         if (forecasts != null && !forecasts.isEmpty()) {
             errorLayout.setVisibility(View.GONE);
             adapter.setData(forecasts);
+            swipeRefreshLayout.setRefreshing(false);
         } else {
-            errorLayout.setVisibility(View.VISIBLE);
-            tvErrorMessage.setText(R.string.message_error_json);
+            showError(context.getString(R.string.message_error_json));
         }
+    }
 
+    private void showError(String message) {
+        swipeRefreshLayout.setRefreshing(false);
+        errorLayout.setVisibility(View.VISIBLE);
+        tvErrorMessage.setText(message);
     }
 
     @Override
